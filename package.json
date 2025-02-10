@@ -1,0 +1,38 @@
+{
+  "name": "cryptocurrencies-exchange",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon -L swagger.js"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "swagger-docs/**"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@solana/spl-token": "^0.4.12",
+    "@solana/web3.js": "^1.98.0",
+    "axios": "^1.7.9",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ethers": "^6.13.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "lightweight-charts": "^5.0.1",
+    "mongoose": "^8.0.0",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.1",
+    "nodemon": "^3.0.1",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.0"
+  }
+}
