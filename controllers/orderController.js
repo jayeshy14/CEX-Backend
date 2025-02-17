@@ -1,6 +1,6 @@
 const Order = require("../models/orderModel");
 const { matchOrders } = require("../services/matchingEngine");
-const { getOrderBook } = require("../utils/orderBook");
+const { getOrderBook } = require("../utils/trading/orderBook");
 const { cancelOrder } = require("../services/cancelOrder");
 
 exports.placeOrder = async (req, res) => {

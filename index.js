@@ -1,6 +1,6 @@
 //index.js
 const express = require("express");
-const connectWithRetry = require("./utils/database");
+const connectWithRetry = require("./config/database");
 // const seed = require("./seed");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger-docs/swagger.json");
@@ -9,10 +9,10 @@ const cors = require('cors');
 const userRoute = require("./routes/userRoute");
 const orderRoute = require("./routes/orderRoute");
 const walletRoute = require("./routes/walletRoute");
+const depositRoute = require("./routes/depositRoutes")
 // const priceUpdater = require('./services/priceUpdater');
 const tradeRoute = require("./routes/tradeRoute");
 const cryptocurrencyRoute = require("./routes/cryptocurrencyRoute");
-const walletCryptocurrencyRoute = require('./routes/walletCryptocurrencyRoute')
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -30,14 +30,16 @@ app.get("/", (req, res) => {
 	res.send("<h1>Hello World!!!</h1>");
 });
 
+app.use("/api/v1/deposits", depositRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/orders", orderRoute);
 app.use("/api/v1/wallets", walletRoute);
 app.use("/api/v1/trades", tradeRoute);
 app.use("/api/v1/cryptocurrencies", cryptocurrencyRoute);
-app.use("/api/v1/wallet_cryptocurrency", walletCryptocurrencyRoute);
 
 // Start price updater
 // priceUpdater.updatePrices();
 
-app.listen(port, () => console.log(`Start server port: ${port}`));
+app.listen(port, () => {
+	console.log(`Start server port: ${port}`);
+});

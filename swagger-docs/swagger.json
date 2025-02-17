@@ -25,12 +25,74 @@
         }
       }
     },
+    "/api/v1/deposits/getDepositAddress": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "example": "any"
+                },
+                "selectedCrypto": {
+                  "example": "any"
+                },
+                "selectedChain": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/deposits/handleEvmDeposit": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "event": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/v1/users/": {
       "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Get all users",
         "description": "",
         "responses": {
           "200": {
@@ -109,10 +171,6 @@
         }
       },
       "delete": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Delete user by id",
         "description": "",
         "parameters": [
           {
@@ -135,10 +193,6 @@
         }
       },
       "patch": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Update user by id",
         "description": "",
         "parameters": [
           {
@@ -146,27 +200,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "firstName": {
-                  "example": "any"
-                },
-                "lastName": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                },
-                "phone_number": {
-                  "example": "any"
-                }
-              }
-            }
           }
         ],
         "responses": {
@@ -339,10 +372,6 @@
     },
     "/api/v1/wallets/": {
       "get": {
-        "tags": [
-          "Wallets"
-        ],
-        "summary": "Get all Wallets",
         "description": "",
         "responses": {
           "200": {
@@ -354,31 +383,10 @@
         }
       },
       "post": {
-        "tags": [
-          "Wallets"
-        ],
-        "summary": "Create Wallets",
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "balance": {
-                  "example": "any"
-                },
-                "user_id": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "400": {
             "description": "Bad Request"
@@ -388,10 +396,6 @@
     },
     "/api/v1/wallets/{id}": {
       "get": {
-        "tags": [
-          "Wallets"
-        ],
-        "summary": "Get Wallet by id",
         "description": "",
         "parameters": [
           {
@@ -414,10 +418,6 @@
         }
       },
       "delete": {
-        "tags": [
-          "Wallets"
-        ],
-        "summary": "Delete Wallet by id",
         "description": "",
         "parameters": [
           {
@@ -440,10 +440,6 @@
         }
       },
       "patch": {
-        "tags": [
-          "Wallets"
-        ],
-        "summary": "Update Wallet by id",
         "description": "",
         "parameters": [
           {
@@ -451,21 +447,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "balance": {
-                  "example": "any"
-                },
-                "user_id": {
-                  "example": "any"
-                }
-              }
-            }
           }
         ],
         "responses": {
@@ -474,6 +455,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -581,8 +565,8 @@
           "200": {
             "description": "OK"
           },
-          "400": {
-            "description": "Bad Request"
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -613,11 +597,17 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "400": {
             "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -641,28 +631,11 @@
           "200": {
             "description": "OK"
           },
-          "400": {
-            "description": "Bad Request"
-          },
           "404": {
             "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/v1/wallet_cryptocurrency/": {
-      "get": {
-        "tags": [
-          "WalletCryptocurrencies"
-        ],
-        "summary": "Get all WalletCryptocurrencies",
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
           },
-          "400": {
-            "description": "Bad Request"
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

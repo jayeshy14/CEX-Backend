@@ -1,9 +1,8 @@
-const WalletCryptocurrency = require("../models/walletCryptocurrencyModel");
 const Wallet = require("../models/walletModel");
 const Order = require("../models/orderModel");
 const Trade = require("../models/tradeModel");
-const { getOrderBook } = require("../utils/orderBook");
-const { executeTrade } = require("../utils/executeTrade");
+const {getOrderBook} = require("../utils/trading/orderBook");
+const {executeTrade} = require("../utils/trading/executeTrade");
 
 /*
  @notice This function matches orders and executes trades

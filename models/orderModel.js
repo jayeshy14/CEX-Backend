@@ -1,33 +1,4 @@
 //orderModel.js
-// const mongoose = require("mongoose");
-
-// const orderSchema = new mongoose.Schema({
-//   type: { type: String, enum: ["buy", "sell"], required: true },
-//   order_type: {type: String, enum: ["limit", "market"], required: true},
-//   user_id: { type: mongoose.Types.ObjectId, ref: "users", required: true }, 
-//   cryptocurrency_id: { type: mongoose.Types.ObjectId, ref: "cryptocurrencies", required: true },
-//   amount: { type: Number, required: true },
-//   price: { type: Number, required: true }, 
-//   status: { type: String, enum: ["open", "filled", "canceled"], default: "open" }, // Order status
-//   trades: [{ type: mongoose.Types.ObjectId, ref: "trades" }], // List of trades associated with the order
-//   created_at: { type: Date, default: Date.now },
-// });
-
-// // Ensure price is only required for limit orders
-// orderSchema.pre("validate", function (next) {
-//   if (this.order_type === "limit" && this.price == null) {
-//     next(new Error("Price is required for limit orders"));
-//   } else if (this.order_type === "market") {
-//     this.price = null; // Market orders do not have a fixed price
-//   }
-//   next();
-// });
-
-// const Order = mongoose.model("orders", orderSchema);
-
-// module.exports = Order;
-
-
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({

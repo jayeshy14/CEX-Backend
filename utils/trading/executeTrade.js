@@ -1,7 +1,6 @@
-const Trade = require("../models/tradeModel");
-const WalletCryptocurrency = require("../models/walletCryptocurrencyModel");
-const Wallet = require("../models/walletModel");
-const Cryptocurrency = require("../models/cryptocurrencyModel");
+const Trade = require("../../models/tradeModel");
+const Wallet = require("../../models/walletModel");
+const Cryptocurrency = require("../../models/cryptocurrencyModel");
 
 
 const executeTrade = async (buyOrder, sellOrder, tradeAmount, tradePrice, cryptocurrencyIdA, cryptocurrencyIdB) => {
@@ -129,3 +128,5 @@ const executeTrade = async (buyOrder, sellOrder, tradeAmount, tradePrice, crypto
     }
 
 }
+
+module.exports = {executeTrade};

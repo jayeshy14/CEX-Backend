@@ -4,8 +4,7 @@ const {
     MONGO_PASSWORD,
     MONGO_PORT,
     MONGO_IP,
-	MONGO_URI,
-} = require("../config/config");
+} = require("./config");
 
 const mongoURL = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`;
 
