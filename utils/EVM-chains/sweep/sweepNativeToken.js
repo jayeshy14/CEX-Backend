@@ -1,5 +1,5 @@
 const ethers = require("ethers");
-const { ethereumProvider } = require("../../utils/EVM-chains/getEthereumProvider");
+const { ethereumProvider } = require("../getEthereumProvider");
 
 
 const sweepNativeToken = async(depositWallet, mainExchangeWallet) => {
