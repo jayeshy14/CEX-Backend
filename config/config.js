@@ -4,4 +4,5 @@ module.exports = {
 	MONGO_USER: process.env.MONGO_USER,
 	MONGO_PASSWORD: process.env.MONGO_PASSWORD,
 	JWT_SECRET: process.env.JWT_SECRET,
+	GOOGLE_CLIENT_ID:process.env.GOOGLE_CLIENT_ID,
 } 

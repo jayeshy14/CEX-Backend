@@ -14,10 +14,15 @@ const depositRoute = require("./routes/depositRoutes")
 const tradeRoute = require("./routes/tradeRoute");
 const cryptocurrencyRoute = require("./routes/cryptocurrencyRoute");
 
+
+
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+
+
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+
 app.use(express.json());
 connectWithRetry();
 // seed(); 
