@@ -1,58 +1,84 @@
-# Simple Cryptocurrency Exchange
+# CEX-Backend
 
-This project is a simple Cryptocurrency exchange application built using `JavaScript`, `Node.js`, `Express`, and `MongoDB` as the database. The API documentation is available through `Swagger`, and the project can be containerized using `Docker`.
+Backend for a centralized cryptocurrency exchange — order book, matching engine, multi-chain deposits and withdrawals, real-time trading. Built at Metadee AI (Jan–Apr 2025).
 
-## Project Overview
+Pairs with [CEX-Frontend](https://github.com/jayeshy14/CEX-Frontend).
 
-- **Tech Stack**: JavaScript, Node.js, Express
-- **Database**: MongoDB
-- **Documentation**: Swagger
-- **Containerization**: Docker
+---
 
-## Database Entity-Relationship Diagram (ERD)
+## What's in here
 
-![alt text](https://github.com/Little-BlackCat/simple-cryptocurrencies-exchange/blob/main/images/Cryptocurrency%20exchange.svg "Cryptocurrency exchange")
+| Subsystem | Code | What it does |
+|-----------|------|--------------|
+| **Matching engine** | `services/matchingEngine.js` | Matches buy/sell orders against the book; emits trades; updates wallet balances atomically |
+| **Order book** | `utils/trading/orderBook.js` | Sorted price-time-priority book per trading pair |
+| **Trade execution** | `utils/trading/executeTrade.js` | Settles a matched pair: locks → debits → credits → records |
+| **Multi-chain deposits** | `utils/EVM-chains/`, `utils/BTC/`, `utils/Solana/` | Per-chain deposit-address generation and inbound transfer monitoring |
+| **Deposit monitoring** | `services/monitorDeposits.js` | Webhook-driven (EVM chains) and polling (BTC/SOL) ingestion |
+| **Pricing** | `services/priceUpdater.js` | CoinGecko polling + in-memory cache (`node-cache`, 60s TTL) |
+| **Auth** | `controllers/authController.js` | Email/password + Google OAuth + password reset |
+| **API docs** | `swagger.js`, `swagger-docs/` | Swagger / OpenAPI spec for every route |
 
-## Prerequisites
+---
 
-- [Docker](https://www.docker.com/get-started/)
+## Stack
 
-## How to Run
+- **Runtime** — Node.js + Express
+- **Database** — MongoDB (Mongoose)
+- **Chains** — Ethereum, BSC, Polygon, Arbitrum, Optimism, Avalanche, Bitcoin, Solana (10+ chains via per-chain util modules)
+- **Wallets** — HD-derivation via `bip32`/`bip39`; Bitcoin via `bitcoinjs-lib` + `coinselect`; Solana via `@solana/web3.js` and `@solana/spl-token`
+- **Pricing** — CoinGecko API
+- **Caching** — `node-cache` for hot price data
+- **Documentation** — Swagger
+- **Containerization** — Docker + docker-compose
 
-1. Clone the project from Git:
+---
 
-   ```bash
-   git clone git@github.com:Little-BlackCat/simple-cryptocurrencies-exchange.git
-   ```
-2. Navigate to the project directory.
-    ```bash
-    cd simple-cryptocurrencies-exchange
-    ```
-3. Build and start the project using Docker Compose:
-    ```bash
-    docker-compose up -d --build
-    ```
-This command will build the project and start the containers in detached mode.
+## Run locally
 
-The project should now be up and running.
+Prerequisites: Node 20+, Docker, MongoDB.
 
-![alt text](https://github.com/Little-BlackCat/simple-cryptocurrencies-exchange/blob/main/images/docker.png "docker")
-
-## Access the Documentation
-You can access the API documentation using Swagger at the following URL:
-http://localhost:3000/api-docs
-
-![alt text](https://github.com/Little-BlackCat/simple-cryptocurrencies-exchange/blob/main/images/swagger-docs.png "swagger-docs")
-
-Enjoy using the Cryptocurrency Exchange project!
-
-## Shutdown and Cleanup
-
-When you're finished using the project, you can stop and remove the containers along with their volumes using the following command:
 ```bash
-docker-compose down -v
+git clone https://github.com/jayeshy14/CEX-Backend.git
+cd CEX-Backend
+cp .env.example .env   # fill in keys
+docker-compose up -d --build
 ```
 
-This ensures a clean shutdown and removes any persisted data volumes.
+Swagger docs: `http://localhost:3000/api-docs`
 
-That's it! You now know how to run and interact with the "Simple Cryptocurrency Exchange" project using Docker.
+---
+
+## Project structure
+
+```
+.
+├── index.js                 Entry — Express bootstrap, route mounting
+├── config/                  DB + env config
+├── controllers/             Route handlers (auth, orders, deposits, withdrawals)
+├── routes/                  Express routers
+├── services/                Long-running / orchestration logic
+│   ├── matchingEngine.js
+│   ├── monitorDeposits.js
+│   ├── priceUpdater.js
+│   ├── cancelOrder.js
+│   └── cacheService.js
+├── utils/
+│   ├── trading/             Order book + trade execution
+│   ├── EVM-chains/          Per-EVM-chain deposit logic
+│   ├── BTC/                 Bitcoin deposit / xpub / sweeps
+│   ├── Solana/              Solana SPL deposits
+│   ├── deposits/            Cross-chain deposit utilities
+│   ├── scheduleSweeps.js    Cron-style fund sweeps to hot wallets
+│   └── transferTokens.js    Outbound withdrawal executor
+├── models/                  Mongoose schemas (User, Wallet, Order, Trade, ...)
+├── seed.js                  Seeds supported chains/tokens for local dev
+├── Dockerfile
+└── docker-compose.yml
+```
+
+---
+
+## License
+
+MIT
