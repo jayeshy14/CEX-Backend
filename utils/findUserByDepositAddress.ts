@@ -1,15 +1,9 @@
 import User, { IUser } from '../models/userModel';
-import Chain from '../models/chainModel';
+import Wallet from '../models/walletModel';
 
 export const findUserByDepositAddress = async (address: string): Promise<IUser | null> => {
-  const chain = await Chain.findOne({ deposit_addresses: { $in: [address] } });
-  if (!chain) {
-    throw new Error('Chain not found');
-  }
+  const wallet = await Wallet.findOne({ 'chains.address': address });
+  if (!wallet) return null;
 
-  const user = await User.findOne({ chain: chain._id });
-  if (!user) {
-    throw new Error('User not found');
-  }
-  return user;
+  return User.findById(wallet.user_id);
 };
