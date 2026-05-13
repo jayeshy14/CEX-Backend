@@ -5,14 +5,21 @@ import { getOrderBook as getOrderBookUtil } from '../utils/trading/orderBook';
 import { cancelOrder as cancelOrderService } from '../services/cancelOrder';
 
 export const placeOrder = async (req: Request, res: Response): Promise<void> => {
-  const { type, order_type, user_id, cryptocurrency_id_A, cryptocurrency_id_B, amount, price } = req.body;
+  const { type, order_type, cryptocurrency_id_A, cryptocurrency_id_B, amount, price } = req.body as {
+    type: string;
+    order_type: string;
+    cryptocurrency_id_A: string;
+    cryptocurrency_id_B: string;
+    amount: number;
+    price: number | null;
+  };
 
   try {
-    if (amount <= 0) {
+    if (!amount || amount <= 0) {
       res.status(400).json({ status: 'fail', error: 'Amount must be greater than zero' });
       return;
     }
-    if (price <= 0 && order_type === 'limit') {
+    if (order_type === 'limit' && (!price || price <= 0)) {
       res.status(400).json({ status: 'fail', error: 'Price must be greater than zero for limit orders' });
       return;
     }
@@ -20,11 +27,11 @@ export const placeOrder = async (req: Request, res: Response): Promise<void> => 
     const order = await Order.create({
       type,
       order_type,
-      user_id,
+      user_id: req.user!._id,
       cryptocurrency_id_A,
       cryptocurrency_id_B,
       amount,
-      price,
+      price: order_type === 'market' ? null : price,
       created_at: new Date(),
       status: 'open',
       trades: [],
@@ -63,7 +70,16 @@ export const getMyOrders = async (req: Request, res: Response): Promise<void> =>
 
 export const cancelOrder = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { orderId } = req.body;
+    const { orderId } = req.body as { orderId: string };
+    const order = await Order.findById(orderId);
+    if (!order) {
+      res.status(404).json({ status: 'fail', error: 'Order not found' });
+      return;
+    }
+    if (order.user_id.toString() !== req.user!._id.toString()) {
+      res.status(403).json({ status: 'fail', error: 'Not authorized to cancel this order' });
+      return;
+    }
     await cancelOrderService(orderId);
     res.status(200).json({ status: 'success', message: 'Order canceled successfully' });
   } catch (error) {

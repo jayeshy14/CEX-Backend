@@ -7,23 +7,19 @@ import { getBTCAddress } from '../utils/BTC/generateBtcAddress';
 
 export const getOrGenerateDepositAddress = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log('Received request body:', req.body);
-
-    const { userId, selectedCrypto, selectedChain } = req.body as {
-      userId?: string;
+    const { selectedCrypto, selectedChain } = req.body as {
       selectedCrypto?: string;
       selectedChain?: string;
     };
 
-    if (!userId || !selectedCrypto || !selectedChain) {
-      res.status(400).json({ error: 'Missing required fields' });
+    if (!selectedCrypto || !selectedChain) {
+      res.status(400).json({ error: 'Missing required fields: selectedCrypto, selectedChain' });
       return;
     }
 
-    console.log('Parsed values:', { userId, selectedCrypto, selectedChain });
+    const userId = req.user!._id.toString();
 
     let wallet = await Wallet.findOne({ user_id: userId });
-
     if (!wallet) {
       wallet = new Wallet({ user_id: userId, chains: [] });
     }
@@ -34,8 +30,6 @@ export const getOrGenerateDepositAddress = async (req: Request, res: Response): 
     if (chainEntry) {
       depositAddress = chainEntry.address;
     }
-
-    console.log('Chain after parsing:', selectedChain);
 
     if (!depositAddress) {
       switch (selectedChain.toUpperCase()) {
@@ -54,10 +48,7 @@ export const getOrGenerateDepositAddress = async (req: Request, res: Response): 
           return;
       }
 
-      wallet.chains.push({
-        chain: new Types.ObjectId(selectedChain),
-        address: depositAddress,
-      });
+      wallet.chains.push({ chain: new Types.ObjectId(selectedChain), address: depositAddress });
       await wallet.save();
     }
 
