@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { placeOrder, cancelOrder, getOrderBook } from '../controllers/orderController';
+import { protect } from '../middleware/auth';
 
 const router = Router();
 
-router.post('/place', placeOrder);
-router.post('/cancel', cancelOrder);
 router.get('/:cryptocurrencyIdA/:cryptocurrencyIdB', getOrderBook);
+router.post('/place', protect, placeOrder);
+router.post('/cancel', protect, cancelOrder);
 
 export default router;

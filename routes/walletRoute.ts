@@ -6,10 +6,11 @@ import {
   updateWallet,
   deleteWallet,
 } from '../controllers/walletController';
+import { protect } from '../middleware/auth';
 
 const router = Router();
 
-router.route('/').get(getAllWallets).post(createWallet);
-router.route('/:id').get(getOneWallet).patch(updateWallet).delete(deleteWallet);
+router.route('/').get(protect, getAllWallets).post(protect, createWallet);
+router.route('/:id').get(protect, getOneWallet).patch(protect, updateWallet).delete(protect, deleteWallet);
 
 export default router;
