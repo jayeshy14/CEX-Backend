@@ -2,15 +2,11 @@
   "name": "cryptocurrencies-exchange",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon -L swagger.js"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "swagger-docs/**"
-    ]
+    "dev": "tsx watch index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -40,8 +36,17 @@
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.1",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mongoose": "^5.11.96",
+    "@types/node": "^25.7.0",
+    "@types/nodemailer": "^8.0.0",
     "nodemon": "^3.0.1",
     "swagger-autogen": "^2.23.7",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui-express": "^5.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
   }
 }
