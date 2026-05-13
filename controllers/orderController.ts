@@ -51,6 +51,16 @@ export const getOrderBook = async (req: Request, res: Response): Promise<void> =
   }
 };
 
+export const getMyOrders = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const orders = await Order.find({ user_id: req.user!._id }).sort({ created_at: -1 });
+    res.status(200).json({ status: 'success', data: { orders } });
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : 'Unknown error';
+    res.status(400).json({ status: 'fail', error: msg });
+  }
+};
+
 export const cancelOrder = async (req: Request, res: Response): Promise<void> => {
   try {
     const { orderId } = req.body;

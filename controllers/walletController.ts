@@ -1,6 +1,19 @@
 import { Request, Response } from 'express';
 import Wallet from '../models/walletModel';
 
+export const getMyWallet = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const wallet = await Wallet.findOne({ user_id: req.user!._id });
+    if (!wallet) {
+      res.status(404).json({ status: 'fail', message: 'Wallet not found' });
+      return;
+    }
+    res.status(200).json({ status: 'success', data: { wallet } });
+  } catch {
+    res.status(400).json({ status: 'fail' });
+  }
+};
+
 export const getAllWallets = async (_req: Request, res: Response): Promise<void> => {
   try {
     const wallets = await Wallet.find();
