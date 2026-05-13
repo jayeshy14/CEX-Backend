@@ -7,7 +7,6 @@ export interface IUser extends Document {
   phone_number?: string;
   email: string;
   password?: string;
-  googleId?: string;
   role: 'user' | 'admin';
   chain: Types.ObjectId[];
   resetToken?: string;
@@ -23,7 +22,6 @@ const userSchema = new Schema<IUser>(
     phone_number: { type: String, unique: true, required: false },
     email: { type: String, unique: true, required: true },
     password: { type: String, required: false },
-    googleId: { type: String, required: false },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     chain: [{ type: Schema.Types.ObjectId, ref: 'chains' }],
     resetToken: { type: String, required: false },

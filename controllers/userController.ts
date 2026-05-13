@@ -1,28 +1,13 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
 import User from '../models/userModel';
 import Wallet from '../models/walletModel';
 import Order from '../models/orderModel';
-import { JWT_SECRET, GOOGLE_CLIENT_ID } from '../config/config';
-
-const client = new OAuth2Client(GOOGLE_CLIENT_ID);
-
-async function verifyGoogleToken(tokenId: string): Promise<TokenPayload | undefined> {
-  try {
-    const ticket = await client.verifyIdToken({
-      idToken: tokenId,
-      audience: GOOGLE_CLIENT_ID,
-    });
-    return ticket.getPayload();
-  } catch {
-    throw new Error('Google Authentication Failed');
-  }
-}
+import { JWT_SECRET } from '../config/config';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -113,44 +98,6 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({ status: 'success', token, userId: user._id, role: user.role });
   } catch {
     res.status(500).send('Server error');
-  }
-};
-
-export const googleLogin = async (req: Request, res: Response): Promise<void> => {
-  const { tokenId } = req.body;
-
-  try {
-    const googleUser = await verifyGoogleToken(tokenId);
-    if (!googleUser) {
-      res.status(400).json({ message: 'Invalid Google token' });
-      return;
-    }
-
-    let user = await User.findOne({
-      $or: [{ googleId: googleUser.sub }, { email: googleUser.email }],
-    });
-
-    if (!user) {
-      user = new User({
-        first_name: googleUser.given_name ?? '',
-        last_name: googleUser.family_name ?? '',
-        email: googleUser.email,
-        googleId: googleUser.sub,
-        role: 'user',
-      });
-      await user.save();
-    }
-
-    const token = jwt.sign(
-      { userId: user._id.toString(), email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: '365d' }
-    );
-
-    res.status(200).json({ token });
-  } catch (error) {
-    console.error('Google Authentication Error:', error);
-    res.status(500).json({ message: 'Google Authentication failed' });
   }
 };
 

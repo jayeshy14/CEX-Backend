@@ -6,7 +6,6 @@ import {
   updateUser,
   deleteUser,
   loginUser,
-  googleLogin,
   getUserProfile,
   forgotPassword,
   resetPassword,
@@ -18,7 +17,6 @@ const router = Router();
 // Public
 router.post('/', createUser);
 router.post('/login', loginUser);
-router.post('/google-login', googleLogin);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:token', resetPassword);
 
