@@ -12,7 +12,9 @@ import depositRoute from './routes/depositRoutes';
 import tradeRoute from './routes/tradeRoute';
 import cryptocurrencyRoute from './routes/cryptocurrencyRoute';
 import withdrawalRoute from './routes/withdrawalRoutes';
+import adminRoute from './routes/adminRoute';
 import { errorHandler } from './middleware/errorHandler';
+import { bootstrapAdmin } from './utils/bootstrapAdmin';
 
 dotenv.config();
 
@@ -25,7 +27,7 @@ app.use(express.json());
 
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: true, legacyHeaders: false });
 
-void connectWithRetry();
+void connectWithRetry().then(() => bootstrapAdmin());
 
 app.get('/', (_req: Request, res: Response) => {
   res.send('CEX API');
@@ -38,6 +40,7 @@ app.use('/api/v1/wallets', walletRoute);
 app.use('/api/v1/trades', tradeRoute);
 app.use('/api/v1/cryptocurrencies', cryptocurrencyRoute);
 app.use('/api/v1/withdrawals', withdrawalRoute);
+app.use('/api/v1/admin', adminRoute);
 
 app.use(errorHandler);
 
