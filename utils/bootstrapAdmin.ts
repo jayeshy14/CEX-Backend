@@ -2,8 +2,8 @@ import bcrypt from 'bcryptjs';
 import User from '../models/userModel';
 
 export const bootstrapAdmin = async (): Promise<void> => {
-  const email = process.env.ADMIN_EMAIL;
-  const password = process.env.ADMIN_PASSWORD;
+  const email = process.env.ADMIN_EMAIL ?? process.env.SUPER_ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD ?? process.env.SUPER_ADMIN_PASSWORD;
 
   if (!email || !password) return;
 
